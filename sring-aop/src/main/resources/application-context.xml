@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config/>
+    <context:component-scan base-package="com.ecommercearchitect.aop.example"/>
+    <!--<aop:aspectj-autoproxy />-->
+
+    <bean id="performanceLoggerAspect" class="com.ecommercearchitect.aop.example.simple.aop.aspects.PerformanceLoggerAspect"/>
+
+
+    <aop:config proxy-target-class="true">
+        <!--<aop:pointcut id="pointCutAround" expression="execution(public void com.ecommercearchitect.aop.example.simple.aop.services.AddToCartServiceWithAOP.*(..))"/>-->
+        <aop:pointcut id="pointCutAround" expression="@annotation(com.ecommercearchitect.aop.example.simple.aop.annotations.PerformanceLoggerAOP)"/>
+        <aop:aspect ref="performanceLoggerAspect">
+            <aop:around method="logPerformance" pointcut-ref="pointCutAround"/>
+        </aop:aspect>
+    </aop:config>
+
+   <!-- references for aspectj usage ( not recommended to use unless its very relevant to use )
+    https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#aop-using-aspectj
+    https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#aop-understanding-aop-proxies
+    https://stackoverflow.com/questions/56614354/why-does-self-invocation-not-work-for-spring-proxies-e-g-with-aop
+    https://www.baeldung.com/spring-aop-vs-aspectj
+    -->
+
+</beans>
